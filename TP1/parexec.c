@@ -2,21 +2,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/types.h>
+
 #include <sys/wait.h>
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-    printf("Bonjour je suis '%s'\n",argv[0]);
+    char *prog = argv[1];
 
-    for(int i=0;i<argc;i++)
-        printf("argv[%d]='%s'\n",i,argv[i]);
+    int idxOfmax = 2;
+    int idxOfParams = 3;
 
-    printf("A\n");
+    int max = atoi(argv[idxOfmax]);
 
-    execl("./rebours", "./rebours", "5", NULL);
+    int runningSubProcesses = 0;
 
-    printf("A\n");
+    for (int paramIdx = 0; paramIdx < argc - idxOfParams; paramIdx++)
+    {
+        if(max == runningSubProcesses){
+            for(int i = 0; i < runningSubProcesses; i ++){
+                wait(NULL);
+            }
+        }
+
+        int childPid = fork();
+
+        runningSubProcesses++;
+
+        if (childPid == 0)
+        {
+            execl(prog, prog, argv[paramIdx + idxOfParams], NULL);
+        }
+    }
+
+    for(int i = 0; i < runningSubProcesses; i ++){
+        wait(NULL);
+    }
 
     return EXIT_SUCCESS;
 }
