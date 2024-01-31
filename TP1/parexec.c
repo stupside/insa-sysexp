@@ -12,5 +12,11 @@ int main(int argc, char* argv[])
     for(int i=0;i<argc;i++)
         printf("argv[%d]='%s'\n",i,argv[i]);
 
+    printf("A\n");
+
+    execl("./rebours", "./rebours", "5", NULL);
+
+    printf("A\n");
+
     return EXIT_SUCCESS;
 }

@@ -3,12 +3,28 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int main(int argc, char* argv[])
-{
-    printf("Bonjour je suis '%s'\n",argv[0]);
+#include <sys/wait.h>
 
-    for(int i=0;i<argc;i++)
-        printf("argv[%d]='%s'\n",i,argv[i]);
+int main(int argc, char *argv[])
+{
+    char *prog = argv[1];
+
+    int params = 2;
+
+    for (int i = params; i < argc; i++)
+    {
+        int childPid = fork();
+
+        if (childPid == 0)
+        {
+            execl(prog, prog, argv[i], NULL);
+        }
+    }
+
+    for (int i = params; i < argc; i++)
+    {
+        wait(NULL);
+    }
 
     return EXIT_SUCCESS;
 }
